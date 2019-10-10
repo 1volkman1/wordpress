@@ -1,0 +1,29 @@
+wordpress:
+  image: wordpress
+  links:
+    - wordpress_db:mariadb
+  ports:
+    - 8080:80
+  environment:
+    - WORDPRESS_DB_PASSWORD=examplepass
+    - WORDPRESS_DB_HOST=mariadb
+    - MYSQL_PORT_3306_TCP=3306
+  restart: unless-stopped
+  volumes:
+    - ~/wordpress/wp_html:/var/www/html
+wordpress_db:
+#  image: mariadb
+  image: library/mysql:5.7.22
+  environment:
+    MYSQL_ROOT_PASSWORD: examplepass
+  restart: unless-stopped
+
+phpmyadmin:
+  image: corbinu/docker-phpmyadmin
+  links:
+    - wordpress_db:mysql
+  ports:
+    - 8181:80
+  environment:
+    MYSQL_USERNAME: root
+    MYSQL_ROOT_PASSWORD: examplepass
